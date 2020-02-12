@@ -34,8 +34,9 @@ class ServerlessPlugin {
         const newResourceId = resourceId + Date.now();
         const references = Object.keys(template.Resources).filter(id => template.Resources[id].Properties.DeploymentId !== undefined)
         for( var i = 0; i < references.length; i++){
-          console.log(references[i])
-          template.Resources[references[i]].Properties.DeploymentId = {'Ref': newResourceId}
+          if(template.Resources[references[i]].Properties.DeploymentId.Ref == resourceId){
+            template.Resources[references[i]].Properties.DeploymentId = {'Ref': newResourceId}
+          }
         }
         template.Resources[newResourceId] = template.Resources[resourceId];
         // Remove old resource (without timestamp)
