@@ -32,6 +32,11 @@ class ServerlessPlugin {
         log(`Appending timestamp to '${resourceId}' to force new deployment!`);
         // Add new resource (with timestamp)
         const newResourceId = resourceId + Date.now();
+        const references = Object.keys(template.Resources).filter(id => template.Resources[id].Properties.DeploymentId !== undefined)
+        for( var i = 0; i < references.length; i++){
+          console.log(references[i])
+          template.Resources[references[i]].Properties.DeploymentId = {'Ref': newResourceId}
+        }
         template.Resources[newResourceId] = template.Resources[resourceId];
         // Remove old resource (without timestamp)
         delete template.Resources[resourceId];
